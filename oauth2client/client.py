@@ -938,6 +938,8 @@ if HAS_CRYPTO:
       self.scope = util.scopes_to_string(scope)
 
       # Keep base64 encoded so it can be stored in JSON.
+      if isinstance(private_key, str):
+          private_key = private_key.encode('ascii')
       self.private_key = base64.b64encode(private_key)
 
       self.private_key_password = private_key_password

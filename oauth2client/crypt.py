@@ -125,7 +125,7 @@ try:
       Raises:
         OpenSSL.crypto.Error if the key can't be parsed.
       """
-      if key.startswith('-----BEGIN '):
+      if key.startswith(b'-----BEGIN '):
         pkey = crypto.load_privatekey(crypto.FILETYPE_PEM, key)
       else:
         pkey = crypto.load_pkcs12(key, password).get_privatekey()
@@ -257,12 +257,14 @@ else:
 
 
 def _urlsafe_b64encode(raw_bytes):
-  return base64.urlsafe_b64encode(raw_bytes).rstrip('=')
+  if isinstance(raw_bytes, str):
+      raw_bytes = raw_bytes.encode('ascii')
+  return base64.urlsafe_b64encode(raw_bytes).decode('ascii').rstrip('=')
 
 
 def _urlsafe_b64decode(b64string):
-  # Guard against unicode strings, which base64 can't handle.
-  b64string = b64string.encode().decode('ascii')
+  if isinstance(b64string, str):
+      b64string = b64string.decode('ascii')
   padded = b64string + '=' * (4 - len(b64string) % 4)
   return base64.urlsafe_b64decode(padded).decode()
 
