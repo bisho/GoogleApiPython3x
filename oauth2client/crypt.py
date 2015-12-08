@@ -109,7 +109,7 @@ try:
       Returns:
         string, The signature of the message for the given key.
       """
-      return crypto.sign(self._key, message, 'sha256')
+      return crypto.sign(self._key, message.encode('ascii'), 'sha256')
 
     @staticmethod
     def from_string(key, password='notasecret'):
